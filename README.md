@@ -8,6 +8,7 @@ This project demonstrates a scalable, secure multi-site network infrastructure f
 ---
 
 ## Network Topology
+![Project Topology](./Multi_Office_Design_Topology.png)  
 
 ```
 [Internet] --- [Core Router]
