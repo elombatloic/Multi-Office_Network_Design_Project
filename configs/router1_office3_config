@@ -1,0 +1,165 @@
+!
+!
+!
+
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname R1-03
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable password baskettd2
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+ip dhcp excluded-address 10.3.10.1 10.3.10.9
+ip dhcp excluded-address 10.3.11.1 10.3.11.9
+ip dhcp excluded-address 10.3.12.1 10.3.12.9
+!
+ip dhcp pool Office-3-IT
+ network 10.3.10.0 255.255.255.0
+ default-router 10.3.10.1 
+ domain-name lgemprojectccna.com
+!
+ip dhcp pool Office-3-Sales
+ network 10.3.11.0 255.255.255.0
+ default-router 10.3.11.1 
+ domain-name lgemprojectccna.com
+!
+ip dhcp pool Office-3-Management
+ network 10.3.12.0 255.255.255.0
+ default-router 10.3.12.1 
+ domain-name lgemprojectccna.com
+!
+!
+!
+no ip domain lookup
+ip domain name lgemprojectccna.com
+ip cef
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+username lgem secret 4 ZIURQH3mmMhCj6KhSz1JoEv/N.2O6Kl1Wu34klg3hjQ
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.3.0.1 255.255.255.255
+ ip ospf 1 area 0
+!
+interface FastEthernet0/0
+ description Trunk to SW1
+ no ip address
+ duplex full
+!
+interface FastEthernet0/0.10
+ description IT VLAN
+ encapsulation dot1Q 10
+ ip address 10.3.10.1 255.255.255.0
+!
+interface FastEthernet0/0.11
+ description Sales VLAN
+ encapsulation dot1Q 11
+ ip address 10.3.11.1 255.255.255.0
+ ip access-group SALES-ACL in
+!
+interface FastEthernet0/0.12
+ description Management VLAN
+ encapsulation dot1Q 12
+ ip address 10.3.12.1 255.255.255.0
+!
+interface FastEthernet0/0.99
+ description Native VLAN
+ encapsulation dot1Q 99 native
+!
+interface FastEthernet1/0
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+!
+interface FastEthernet1/1
+ no ip address
+ shutdown
+ speed auto
+ duplex auto
+!
+interface GigabitEthernet2/0
+ description WAN to Core Router
+ ip address 192.168.1.10 255.255.255.252
+ negotiation auto
+!
+router ospf 1
+ passive-interface FastEthernet0/0
+ passive-interface FastEthernet0/0.10
+ passive-interface FastEthernet0/0.11
+ passive-interface FastEthernet0/0.12
+ passive-interface Loopback0
+ network 10.3.10.0 0.0.0.255 area 0
+ network 10.3.11.0 0.0.0.255 area 0
+ network 10.3.12.0 0.0.0.255 area 0
+ network 192.168.1.8 0.0.0.3 area 0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ip access-list extended SALES-ACL
+ deny   ip 10.3.11.0 0.0.0.255 10.3.12.0 0.0.0.255
+ permit ip any any
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password baskettd2
+ logging synchronous
+ login
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ logging synchronous
+ login local
+ transport input ssh
+!
+!
+end
