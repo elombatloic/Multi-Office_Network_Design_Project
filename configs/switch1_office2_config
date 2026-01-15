@@ -1,0 +1,184 @@
+
+!
+! Last configuration change at 20:10:57 EST Mon Jan 12 2026
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname SW1-02
+!
+boot-start-marker
+boot-end-marker
+!
+!
+logging discriminator EXCESS severity drops 6 msg-body drops EXCESSCOLL 
+logging buffered 50000
+logging console discriminator EXCESS
+enable secret 5 $1$hE40$yCpaf06JhUWGkPVYa/Z7F0
+!
+username lgem secret 5 $1$zd8v$/VM1JRnJYMhgJBZOFOuXF/
+no aaa new-model
+clock timezone EST -5 0
+!
+!
+!
+!
+!
+no ip icmp rate-limit unreachable
+!
+!
+!
+no ip domain-lookup
+ip domain-name lgemprojectccna.com
+no ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+ip tcp synwait-time 5
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ description IT Department
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 0050.7966.680d
+ switchport port-security
+ spanning-tree portfast edge
+!
+interface Ethernet0/1
+ description IT Department
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 0050.7966.6809
+ switchport port-security
+ spanning-tree portfast edge
+!
+interface Ethernet0/2
+ description IT Department
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 0050.7966.680a
+ switchport port-security
+ spanning-tree portfast edge
+!
+interface Ethernet0/3
+ description Sales Department
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 0050.7966.680b
+ switchport port-security
+ spanning-tree portfast edge
+!
+interface Ethernet1/0
+ description Sales Department
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 0050.7966.680c
+ switchport port-security
+ spanning-tree portfast edge
+!
+interface Ethernet1/1
+ description Sales Department
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 0050.7966.6808
+ switchport port-security
+ spanning-tree portfast edge
+!
+interface Ethernet1/2
+ description Management
+ switchport access vlan 12
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 0050.7966.680e
+ switchport port-security
+ spanning-tree portfast edge
+!
+interface Ethernet1/3
+ description Management
+ switchport access vlan 12
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 0050.7966.680f
+ switchport port-security
+ spanning-tree portfast edge
+!
+interface Ethernet2/0
+ description Trunk to R1-02
+ switchport trunk allowed vlan 10-12,99
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport mode trunk
+!
+interface Ethernet2/1
+!
+interface Ethernet2/2
+!
+interface Ethernet2/3
+!
+interface Ethernet3/0
+!
+interface Ethernet3/1
+!
+interface Ethernet3/2
+!
+interface Ethernet3/3
+!
+interface Vlan12
+ ip address 10.2.12.2 255.255.255.0
+!
+ip default-gateway 10.2.12.1
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ logging synchronous
+ login local
+ transport input ssh
+!
+!
+end
